@@ -3,21 +3,22 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
-
     defaultConfig {
-        applicationId "edu.calpoly.android.walkabout"
+        applicationId 'nl.ict.androidcourse.walkabout'
         minSdkVersion 14
         targetSdkVersion 21
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
 }
