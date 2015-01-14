@@ -152,7 +152,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
                 handled=true;
                 break;
             case R.id.menu_recording:
-                Log.d(TAG, "m_bRecording is " + m_bRecording);
                 if (m_bRecording == false) {
                     Toast.makeText(this, "Recording started", Toast.LENGTH_SHORT).show();
                     m_bRecording = true;
@@ -215,6 +214,9 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
             Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
             onLocationChanged(mLastLocation);
+            startLocationUpdates();
+        } else {
+            stopLocationUpdates();
         }
 	}
 	
@@ -252,7 +254,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
                         17));
             }
         }
-        startLocationUpdates();
     }
 
     @Override
@@ -273,6 +274,10 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     @Override
