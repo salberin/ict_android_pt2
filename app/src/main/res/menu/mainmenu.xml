@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- You must fill in the menu items here. -->
-    <item android:id="@+id/menu_recording"
-        app:showAsAction="always"
-        android:title="@string/menuTitle_startRecording" />
-    <item android:id="@+id/menu_save"
-        android:title="@string/menuTitle_save" />
-    <item android:id="@+id/menu_load"
-        android:title="@string/menuTitle_load" />
-    <item android:id="@+id/menu_takePicture"
-        android:title="@string/menuTitle_takePicture" />
-    <item android:id="@+id/menu_enableGPS"
-        android:title="@string/menuTitle_enableGPS" />
 </menu>
