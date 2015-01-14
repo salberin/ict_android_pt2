@@ -35,9 +35,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
  * a traveled path, mark the map with information and take pictures that become
  * associated with the map.
  */
-public class WalkAbout extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class WalkAbout extends ActionBarActivity {
 
 	/** The interactive Google Map fragment. */
 	private GoogleMap m_vwMap;
@@ -77,7 +75,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
-        buildGoogleApiClient();
         initLocationData();
         initLayout();
     }
@@ -125,11 +122,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
             }
         }
 
-        if (m_bRecording) {
-            menu.findItem(R.id.menu_recording).setTitle(R.string.menuTitle_stopRecording);
-        } else {
-            menu.findItem(R.id.menu_recording).setTitle(R.string.menuTitle_startRecording);
-        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -152,15 +144,7 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
                 handled=true;
                 break;
             case R.id.menu_recording:
-                if (m_bRecording == false) {
-                    Toast.makeText(this, "Recording started", Toast.LENGTH_SHORT).show();
-                    m_bRecording = true;
-                } else {
-                    Toast.makeText(this, "Recording stopped", Toast.LENGTH_SHORT).show();
-                    m_bRecording = false;
-                }
-                invalidateOptionsMenu();
-                setRecordingState(m_bRecording);
+                Toast.makeText(this, "Menu Start pressed", Toast.LENGTH_SHORT).show();
                 handled=true;
                 break;
             case R.id.menu_takePicture:
@@ -184,20 +168,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
 
     }
 
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // simplified error handling here
-        mGoogleApiClient.connect();
-    }
-
     /**
 	 * Switch the application so it is or isn't recording the user's path on the map.
 	 *  
@@ -205,19 +175,6 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
 	 * 						Whether or not to start recording.
 	 */
 	private void setRecordingState(boolean bRecording) {
-		if (bRecording) {
-            m_arrPathPoints.clear();
-            m_vwMap.clear();
-            m_pathLine = m_vwMap.addPolyline(new PolylineOptions());
-            m_pathLine.setColor(Color.GREEN);
-
-            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-            onLocationChanged(mLastLocation);
-            startLocationUpdates();
-        } else {
-            stopLocationUpdates();
-        }
 	}
 	
 	/**
@@ -234,61 +191,4 @@ public class WalkAbout extends ActionBarActivity implements GoogleApiClient.Conn
 	private void loadRecording() {
 		// TODO
 	}
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            if (m_vwMap != null) {
-                m_vwMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()),
-                        17));
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // Simplified connection management here
-        Toast.makeText(this, "Unable to connect to Play Services framework!", Toast.LENGTH_LONG).show();
-    }
-
-    protected void startLocationUpdates() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
-    }
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "New location received");
-        LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-        if (m_bRecording && (m_arrPathPoints != null)) {
-            m_arrPathPoints.add(ll);
-            m_pathLine.setPoints(m_arrPathPoints);
-        }
-
-        m_vwMap.animateCamera(CameraUpdateFactory.newLatLng(ll));
-    }
 }
