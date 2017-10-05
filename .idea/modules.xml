@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Walkabout.iml" filepath="$PROJECT_DIR$/Walkabout.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ict_android_pt2.iml" filepath="$PROJECT_DIR$/ict_android_pt2.iml" />
     </modules>
   </component>
 </project>
-
